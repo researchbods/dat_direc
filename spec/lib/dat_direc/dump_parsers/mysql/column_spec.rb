@@ -116,27 +116,128 @@ describe DatDirec::DumpParsers::MySQL::Column do
     include_examples "auto_incrementable"
   end
 
-  context "with an int column" do
-    let(:line) { "`id` int" }
-    # include_examples "options"
-    it "has id for a name and int for type" do
-      expect(subject.name).to eq "id"
-      expect(subject.type).to eq "int"
+  shared_examples_for "column" do |name:, type: |
+    include_examples "options"
+
+    it "has type '#{type}'" do
+      expect(subject.type).to eq type
     end
 
-    context "with length 11" do
-      let(:line) { "`id` int(11)" }
+    it "has name '#{name}'" do
+      expect(subject.name).to eq name
+    end
+  end
 
-      it "has id for a name and int for type" do
+  shared_examples_for "column with one limit" do |name:, type:|
+    include_examples "column", name: name, type: type
+
+    it "has nil limit" do
+      expect(subject.options[:limit]).to be nil
+    end
+
+    context "with length 255" do
+      let(:line) { "`id` #{type}(255)" }
+
+      it "has id for a name and #{type} for type" do
         expect(subject.name).to eq "id"
-        expect(subject.type).to eq "int"
+        expect(subject.type).to eq type
+      end
+
+      it "has limit: 255 in options" do
+        expect(subject.options[:limit]).to eq 255
+      end
+
+      include_examples "options"
+    end
+  end
+
+  shared_examples_for "column with two type params" do |name:, type:|
+    # the two-limit columns can also take just one limit
+    include_examples "column with one limit", name: name, type: type
+
+    context "with (11,4)" do
+      let(:line) { "`id` #{type}(11,4)" }
+
+      it "has id for a name and #{type} for type" do
+        expect(subject.name).to eq "id"
+        expect(subject.type).to eq type
       end
 
       it "has limit: 11 in options" do
         expect(subject.options[:limit]).to eq 11
       end
 
+      it "has decimal: 4 in options" do
+        expect(subject.options[:decimal]).to eq 4
+      end
+
       include_examples "options"
+    end
+  end
+
+  %w[
+    date
+    time
+    datetime
+    timestamp
+    year
+    tinyblob
+    blob
+    mediumblob
+    bigblob
+    tinytext
+    text
+    mediumtext
+    bigtext
+  ].each do |type|
+    context "with a #{type} column called 'id'" do
+      let(:line) { "`id` #{type}" }
+
+      it_behaves_like "column", name: "id", type: type
+    end
+
+    context "with a #{type} column called 'message'" do
+      let(:line) { "`message` #{type}" }
+
+      it_behaves_like "column", name: "message", type: type
+    end
+  end
+
+  %w[
+    varchar
+    char
+    int
+    tinyint
+    smallint
+  ].each do |type|
+    context "with a #{type} column called 'id'" do
+      let(:line) { "`id` #{type}" }
+
+      it_behaves_like "column with one limit", name: "id", type: type
+    end
+
+    context "with a #{type} column called 'message'" do
+      let(:line) { "`message` #{type}" }
+
+      it_behaves_like "column with one limit", name: "message", type: type
+    end
+  end
+
+  two_number_types = %w[
+      float
+      double
+      decimal
+  ].each do |type|
+    context "with a #{type} column called 'id'" do
+      let(:line) { "`id` #{type}" }
+
+      it_behaves_like "column with two type params", name: "id", type: type
+    end
+
+    context "with a #{type} column called 'message'" do
+      let(:line) { "`message` #{type}" }
+
+      it_behaves_like "column with two type params", name: "message", type: type
     end
   end
 end

@@ -6,7 +6,13 @@ module DatDirec
     class MySQL
       # Parser for MySQL columns inside a CREATE TABLE, one column per line
       class Column
+        TYPE_MAP = {
+          "varchar" => "string",
+          "char" => "string",
+        }.freeze
+
         include ParseHelper
+
         def initialize(line, line_no)
           @pos = 0
           @io = StringIO.new(line)
@@ -16,7 +22,7 @@ module DatDirec
         def parse
           parse_name
           parse_type
-          parse_options if getc == " "
+          parse_options
           debug options.inspect
 
           ::DatDirec::Column.new(@name, @type, options)
@@ -32,43 +38,29 @@ module DatDirec
         end
 
         def parse_type
-          read_limit = false
-          reading = true
-          type = "".dup
           debug "parsing type"
 
-          while reading
-            chr = @io.getc
-            debug "chr: '#{chr}'"
-            case chr
-            when "("
-              read_limit = true
-              reading = false
-            when " ", ","
-              reading = false
-            else
-              type << chr
-            end
-          end
+          type = read_to_next(" ")
+          raise "'#{type}' did not match the regex" unless type =~ /^([a-zA-Z]+)(?:\((\d+)(?:,(\d+))?\))?$/
+
+          type = Regexp.last_match[1]
+          limit = Regexp.last_match[2]
+          decimal = Regexp.last_match[3]
 
           @type = type
-          options[:limit] = Integer(read_to_next(")")) if read_limit
+          options[:limit] = Integer(limit) if limit
+          options[:decimal] = Integer(limit) if decimal
         end
 
         def parse_options
           words = @io.read.chomp.chomp(",").split(" ")
+          debug "words starts as #{words}"
           words = parse_collate(words) unless words.empty?
-          debug "options is now: #{options.inspect}"
           words = parse_null(words) unless words.empty?
-          debug "options is now: #{options.inspect}"
           words = parse_default(words) unless words.empty?
-          debug "options is now: #{options.inspect}"
           words = parse_auto_increment(words) unless words.empty?
-          debug "options is now: #{options.inspect}"
 
-          unless words.empty?
-            debug "Unsupported extra bits: #{words.join(" ")}"
-          end
+          debug "Unsupported extra bits: #{words.join(" ")}" unless words.empty?
         end
 
         def parse_collate(words)
@@ -105,7 +97,7 @@ module DatDirec
               chrs = StringIO.new(words.slice(1, words.count).join(" "))
               getc("'", io: chrs)
               options[:default] = read_to_next("'", io: chrs)
-              chrs.read.split(' ')
+              chrs.read.split(" ")
             end
           else
             words
