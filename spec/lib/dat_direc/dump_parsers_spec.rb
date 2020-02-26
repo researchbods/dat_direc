@@ -45,7 +45,7 @@ RSpec.describe DatDirec::DumpParsers do
       context "when there's already a parser" do
         before { described_class.register_parser(FakeParser2) }
 
-        fit "adds the parser" do
+        it "adds the parser" do
           expect { subject }.to(
             change { described_class.parsers.to_a }
             .to([FakeParser2, FakeParser])
