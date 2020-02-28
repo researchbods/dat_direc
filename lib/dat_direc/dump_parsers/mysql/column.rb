@@ -49,7 +49,7 @@ module DatDirec
 
           @type = type
           options[:limit] = Integer(limit) if limit
-          options[:decimal] = Integer(limit) if decimal
+          options[:decimal] = Integer(decimal) if decimal
         end
 
         def parse_options
