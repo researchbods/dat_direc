@@ -11,6 +11,10 @@ module DatDirec
           "char" => "string",
         }.freeze
 
+        def self.generic_type(type)
+          TYPE_MAP[type] || type
+        end
+
         include ParseHelper
 
         def initialize(line, line_no)
@@ -25,7 +29,7 @@ module DatDirec
           parse_options
           debug options.inspect
 
-          ::DatDirec::Column.new(@name, @type, options)
+          ::DatDirec::Column.new(@name, generic_type, options)
         end
 
         def options
@@ -111,6 +115,10 @@ module DatDirec
             words.slice(1, words.count)
           else words
           end
+        end
+
+        def generic_type
+          self.class.generic_type @type
         end
       end
     end

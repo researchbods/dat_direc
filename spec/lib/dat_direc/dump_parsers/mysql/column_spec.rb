@@ -117,10 +117,11 @@ describe DatDirec::DumpParsers::MySQL::Column do
   end
 
   shared_examples_for "column" do |name:, type: |
+    generic_type = described_class.generic_type(type)
     include_examples "options"
 
-    it "has type '#{type}'" do
-      expect(subject.type).to eq type
+    it "has type '#{generic_type}'" do
+      expect(subject.type).to eq generic_type
     end
 
     it "has name '#{name}'" do
@@ -137,10 +138,11 @@ describe DatDirec::DumpParsers::MySQL::Column do
 
     context "with length 255" do
       let(:line) { "`id` #{type}(255)" }
+      generic_type = described_class.generic_type(type)
 
-      it "has id for a name and #{type} for type" do
+      it "has id for a name and #{generic_type} for type" do
         expect(subject.name).to eq "id"
-        expect(subject.type).to eq type
+        expect(subject.type).to eq generic_type
       end
 
       it "has limit: 255 in options" do
@@ -158,9 +160,11 @@ describe DatDirec::DumpParsers::MySQL::Column do
     context "with (11,4)" do
       let(:line) { "`id` #{type}(11,4)" }
 
-      it "has id for a name and #{type} for type" do
+      generic_type = described_class.generic_type(type)
+
+      it "has id for a name and #{generic_type} for type" do
         expect(subject.name).to eq "id"
-        expect(subject.type).to eq type
+        expect(subject.type).to eq generic_type
       end
 
       it "has limit: 11 in options" do
