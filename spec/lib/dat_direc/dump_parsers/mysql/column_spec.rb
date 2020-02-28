@@ -227,10 +227,10 @@ describe DatDirec::DumpParsers::MySQL::Column do
     end
   end
 
-  two_number_types = %w[
-      float
-      double
-      decimal
+  %w[
+    float
+    double
+    decimal
   ].each do |type|
     context "with a #{type} column called 'id'" do
       let(:line) { "`id` #{type}" }

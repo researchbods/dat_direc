@@ -11,17 +11,21 @@
 AllCops:
   TargetRubyVersion: 2.3
 
-Style/StringLiterals:
-  EnforcedStyle: 'double_quotes'
-
 Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - 'spec/**/*_spec.rb'
-
-Style/BlockDelimiters:
   Exclude:
     - 'spec/**/*_spec.rb'
 
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*_spec.rb'
+    - 'dat_direc.gemspec'
+
+Style/BlockDelimiters:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/StringLiterals:
+  EnforcedStyle: 'double_quotes'
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: 'comma'

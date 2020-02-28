@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/dump_parsers/parse_helper"
 require "dat_direc/core/column"
 
@@ -41,11 +43,13 @@ module DatDirec
           getc(" ")
         end
 
+        TYPE_REGEX = /^([a-zA-Z]+)(?:\((\d+)(?:,(\d+))?\))?$/.freeze
+
         def parse_type
           debug "parsing type"
 
           type = read_to_next(" ")
-          raise "'#{type}' did not match the regex" unless type =~ /^([a-zA-Z]+)(?:\((\d+)(?:,(\d+))?\))?$/
+          raise "'#{type}' did not match the regex" unless type =~ TYPE_REGEX
 
           type = Regexp.last_match[1]
           limit = Regexp.last_match[2]
@@ -64,7 +68,7 @@ module DatDirec
           words = parse_default(words) unless words.empty?
           words = parse_auto_increment(words) unless words.empty?
 
-          debug "Unsupported extra bits: #{words.join(" ")}" unless words.empty?
+          debug "Unsupported extra bits: #{words.join(' ')}" unless words.empty?
         end
 
         def parse_collate(words)

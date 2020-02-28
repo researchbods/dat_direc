@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 module DatDirec
   module DumpParsers
-    # base s with some shared functionality for parsing simple stuff
+    # some shared functionality for parsing simple stuff in a
+    # character-by-character fashion. I'm too lazy to figure out
+    # writing a proper grammar for sql.
     module ParseHelper
       def read_delimited_string(delimiter: "`", io: @io)
         getc(delimiter, io: io)

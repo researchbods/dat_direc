@@ -8,7 +8,6 @@ module DatDirec
       @name = name
       @type = type
       @options = options
-      #puts "Column.new(#{options.inspect})"
     end
   end
 end
