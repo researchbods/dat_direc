@@ -5,12 +5,19 @@ module DatDirec
   class Table
     attr_reader :name
 
-    def initialize(name)
+    def initialize(name, columns: nil, indexes: nil, options: nil)
       @name = name.dup.freeze
+      @columns = Hash[columns.map { |x| [x.name, x] }] if columns
+      @indexes = indexes if indexes
+      @options = options if options
     end
 
     def add_options(options)
       @options.merge!(options)
+    end
+
+    def add_column(column)
+      columns[column.name] = column
     end
 
     def options

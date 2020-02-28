@@ -4,8 +4,9 @@ module DatDirec
   class Database
     attr_reader :type
 
-    def initialize(type)
+    def initialize(type, tables: nil)
       @type = type
+      @tables = Hash[tables.map { |t| [t.name, t] }] if tables
     end
 
     def add_table(table)

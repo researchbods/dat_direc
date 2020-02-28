@@ -1,99 +1,57 @@
+# frozen_string_literal: true
+
+require "dat_direc/core/database"
+require "dat_direc/core/table"
+require "dat_direc/dump_parsers/mysql/column"
+require "dat_direc/dump_parsers/mysql/key"
+
 module DatDirec
   module DumpParsers
-    class MySQLDumpParser
+    class MySQL
       def self.detect(io)
-        io.gets =~ /MySQL/
+        res = io.gets =~ /MySQL/
+        io.rewind
+        res
       end
 
       def initialize(io)
         @io = io
         @table = nil
-
       end
 
       def parse
-        @database = Database.new
-        @io.each do |line|
-          next
+        @database = Database.new(:mysql)
+        @io.each.with_index do |line, index|
+          @line_no = index + 1
           parse_line(line)
         end
         @database
       end
 
-      COLUMNS_REGEXP = /\(`([^`]*)`(?:,`([^`]*)`)\)/
+      COLUMNS_REGEXP = /^\s*`([^`]*)`/.freeze
 
       def parse_line(line)
-        case line
-        when /CREATE TABLE `(.*)`/
-          @table = Table.new(Regexp.last_match[1]
-        when /^\s*(PRIMARY |UNIQUE )?KEY/
-          parse_key(line)
-        when /(?: ([A-Z0-9_])(?:=([^ ]*)))?;/
+        case line.strip
+        when /^CREATE TABLE `(.*)`/
+          @table = Table.new(Regexp.last_match[1])
+        when COLUMNS_REGEXP
+          col = parse_column(line.strip)
+          @table.add_column(col)
+        when /^(PRIMARY |UNIQUE )?KEY/
+          key = parse_key(line.strip)
+          @table.indexes << key
+        when /^\).*;$/
+          @database.add_table(@table)
+          @table = nil
         end
       end
 
       def parse_key(line)
-        KeyParser.new(line).parse
+        Key.new(line, @line_no).parse
       end
 
-      def parse_column
-
-      end
-
-      class KeyParser
-        def initialize(line, line_no)
-          @pos = 0
-          @io = StringIO.new(line)
-          @line_no = line_no
-        end
-
-        def parse
-          parse_key_type
-          parse_key_name if @type != 'PRIMARY'
-          parse_key_columns
-        end
-
-        def parse_key_type
-          type = read_to_next(' ')
-          case type
-          when "PRIMARY"
-            @type = :primary
-            read_key
-          when "UNIQUE"
-            @type = :unique
-            read_key
-          when "KEY"
-            @type = :index
-          else
-            raise "Unexpected #{type} - expecting PRIMARY, UNIQUE, or KEY on line #{@line_no}"
-          end
-        end
-
-        def parse_key_name
-          @name = parse_delimited_string
-        end
-
-        def parse_delimited_string
-          delim = read_to_next('`', keep: true)
-          raise "Unexpected #{delim} - expecting start of string (`)" if delim != "`"
-
-          read_to_next('`')
-        end
-
-        def read_key
-          key = read_to_next(' ')
-          if key != "KEY"
-            raise "Unexpected #{key} - expecting KEY on line #{@line_no}"
-          end
-        end
-
-        def read_to_next(sep, keep: false)
-          str = @io.gets(sep)
-          if keep
-            str
-          else
-            str.chomp(sep)
-        end
+      def parse_column(line)
+        Column.new(line, @line_no).parse
       end
     end
   end
