@@ -1,4 +1,4 @@
-https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Paul_Dirac%2C_1933.jpg/220px-Paul_Dirac%2C_1933.jpg
+![Paul Dirac](https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Paul_Dirac%2C_1933.jpg/220px-Paul_Dirac%2C_1933.jpg)
 > "Hey, that's almost my name" - Paul Dirac
 
 Dat DiRec
