@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.license = "MIT"
 
+  s.add_dependency "thor", "~> 1.0"
+
   s.add_development_dependency "fuubar", "~> 2.3"
   s.add_development_dependency "guard", "~> 2.15"
   s.add_development_dependency "guard-rspec", "~> 4.7"
@@ -28,10 +30,6 @@ Gem::Specification.new do |s|
     "lib/**/*",
     "bin/*",
     "README.md",
-    "spec/**/*",
-    "Guardfile",
-    ".rspec",
-    ".rubocop.yml",
   ]
 
   s.executables = %w[datdirec]

@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-puts "Not yet implemented!"
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+
+require "dat_direc/app"
+DatDirec::CLI::App.start
