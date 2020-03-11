@@ -15,5 +15,13 @@ module DatDirec
     def isomorphic?(other)
       columns == other.columns
     end
+
+    # TODO: test
+    def ==(other)
+      other.name == name &&
+        other.type == type &&
+        other.columns == columns &&
+        other.options == options
+    end
   end
 end

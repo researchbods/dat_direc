@@ -31,5 +31,28 @@ module DatDirec
     def columns
       @columns ||= {}
     end
+
+    # TODO: test
+    def ==(other)
+      name == other.name &&
+        options == other.options &&
+        same_columns?(other) &&
+        same_indexes?(other)
+    end
+
+    def same_columns?(other)
+      (columns.keys - other.columns.keys).empty? &&
+        (other.columns.keys - columns.keys).empty? &&
+        columns.all? { |k, v| other.columns[k] && other.columns[k] == v }
+    end
+
+    def same_indexes?(other)
+      indexes_self = Hash[indexes.map { |i| [i.name, i] }]
+      indexes_other = Hash[other.indexes.map { |i| [i.name, i] }]
+
+      (indexes_self.keys - indexes_other.keys).empty? &&
+        (indexes_other.keys - indexes_self.keys).empty? &&
+        indexes_self.all? { |k, v| indexes_other[k] && indexes_other[k] == v }
+    end
   end
 end

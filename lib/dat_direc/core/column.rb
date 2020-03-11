@@ -9,5 +9,12 @@ module DatDirec
       @type = type
       @options = options
     end
+
+    # TODO: test
+    def ==(other)
+      other.name == name &&
+        other.type == type &&
+        other.options == options
+    end
   end
 end

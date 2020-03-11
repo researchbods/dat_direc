@@ -16,5 +16,13 @@ module DatDirec
     def tables
       @tables ||= {}
     end
+
+    # TODO: test
+    def ==(other)
+      (tables.keys - other.tables.keys).empty? &&
+        tables.all? do |k, v|
+          other.tables[k] && other.tables[k] == v
+        end
+    end
   end
 end
