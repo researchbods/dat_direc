@@ -11,11 +11,6 @@ module DatDirec
         read_to_next(delimiter, io: io)
       end
 
-      def read_key
-        key = read_to_next(" ")
-        error! "Unexpected '#{key}' - expecting KEY" if key != "KEY"
-      end
-
       def getc(*expected, io: @io)
         @last_read_pos = io.pos
         chr = io.getc

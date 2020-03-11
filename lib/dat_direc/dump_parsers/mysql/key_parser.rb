@@ -31,7 +31,11 @@ module DatDirec
 
         # I'm sure there'll be something
         def options
-          @options ||= {}
+          @options ||= begin
+                         opts = {}
+                         opts[:length] = @column_lengths unless @column_lengths.empty?
+                         opts
+                       end
         end
 
         def parse_type
@@ -56,18 +60,29 @@ module DatDirec
           getc("(")
 
           @columns = []
-          carry_on = true
-          while carry_on
-            @columns << read_delimited_string
+          @column_lengths = {}
+          parse_column
+        end
 
-            case getc(")", ",")
-            when ","
-              next
-            when ")"
-              carry_on = false
-            end
+        def parse_column
+          column = read_delimited_string
+
+          @columns << column
+
+          case getc("(", ")", ",")
+          when "("
+            @column_lengths[column] = Integer(read_to_next(")"))
+            parse_column if getc(")", ",") == ","
+          when ","
+            parse_column
           end
         end
+
+        def read_key
+          key = read_to_next(" ")
+          error! "Unexpected '#{key}' - expecting KEY" if key != "KEY"
+        end
+
       end
     end
   end
