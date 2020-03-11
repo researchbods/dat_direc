@@ -18,7 +18,7 @@ RSpec.describe DatDirec::DumpParsers::MySQL do
       <<~SQL
         CREATE TABLE `creams` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
-          `name` varchar(255) DEFAULT '' NOT NULL,
+          `name` varchar(255) NOT NULL DEFAULT '',
           `consistency` float(11,4) NOT NULL
         ) ENGINE=InnoDB;
       SQL
