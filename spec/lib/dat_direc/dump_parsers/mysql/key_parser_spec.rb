@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "dat_direc/dump_parsers/mysql/key"
+require "dat_direc/dump_parsers/mysql/key_parser"
 
-RSpec.describe DatDirec::DumpParsers::MySQL::Key do
+RSpec.describe DatDirec::DumpParsers::MySQL::KeyParser do
   subject { described_class.new(line, line_no).parse }
   let(:line_no) { 1 }
 

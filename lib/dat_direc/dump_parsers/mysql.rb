@@ -2,14 +2,15 @@
 
 require "dat_direc/core/database"
 require "dat_direc/core/table"
-require "dat_direc/dump_parsers/mysql/column"
-require "dat_direc/dump_parsers/mysql/key"
+require "dat_direc/dump_parsers/mysql/column_parser"
+require "dat_direc/dump_parsers/mysql/key_parser"
+require "dat_direc/dump_parsers/registration"
 
 module DatDirec
   module DumpParsers
     class MySQL
       def self.detect(io)
-        res = io.gets =~ /MySQL/
+        res = io.gets.downcase.include?("mysql")
         io.rewind
         res
       end
@@ -47,12 +48,14 @@ module DatDirec
       end
 
       def parse_key(line)
-        Key.new(line, @line_no).parse
+        KeyParser.new(line, @line_no).parse
       end
 
       def parse_column(line)
-        Column.new(line, @line_no).parse
+        ColumnParser.new(line, @line_no).parse
       end
     end
   end
 end
+
+DatDirec::DumpParsers.register_parser(DatDirec::DumpParsers::MySQL)

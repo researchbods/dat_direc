@@ -7,7 +7,7 @@ module DatDirec
   module DumpParsers
     class MySQL
       # Parses a single KEY line
-      class Key
+      class KeyParser
         include ParseHelper
 
         def initialize(line, line_no)

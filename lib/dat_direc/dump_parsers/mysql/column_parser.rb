@@ -7,7 +7,7 @@ module DatDirec
   module DumpParsers
     class MySQL
       # Parser for MySQL columns inside a CREATE TABLE, one column per line
-      class Column
+      class ColumnParser
         TYPE_MAP = {
           "varchar" => "string",
           "char" => "string",
