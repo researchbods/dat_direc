@@ -15,6 +15,14 @@ module DatDirec
         res
       end
 
+      def self.name
+        "MySQL"
+      end
+
+      def name
+        self.class.name
+      end
+
       def initialize(io)
         @io = io
         @table = nil
@@ -36,7 +44,7 @@ module DatDirec
         when /^CREATE TABLE `(.*)`/
           @table = Table.new(Regexp.last_match[1])
         when COLUMNS_REGEXP
-          col = parse_column(line.strip)
+          col = parse_column(line.strip.chomp(','))
           @table.add_column(col)
         when /^(PRIMARY |UNIQUE )?KEY/
           key = parse_key(line.strip)

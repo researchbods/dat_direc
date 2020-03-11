@@ -19,7 +19,9 @@ RSpec.describe DatDirec::DumpParsers::MySQL do
         CREATE TABLE `creams` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` varchar(255) NOT NULL DEFAULT '',
-          `consistency` float(11,4) NOT NULL
+          `consistency` float(11,4) NOT NULL,
+          `simple` text,
+          `test` int
         ) ENGINE=InnoDB;
       SQL
     end
@@ -29,7 +31,9 @@ RSpec.describe DatDirec::DumpParsers::MySQL do
     let(:creams_columns) { [
       DD::Column.new("id", "int", limit: 11, null: false, auto_increment: true),
       DD::Column.new("name", "string", limit: 255, null: false, default: ""),
-      DD::Column.new("consistency", "float", limit: 11, decimal: 4, null: false)
+      DD::Column.new("consistency", "float", limit: 11, decimal: 4, null: false),
+      DD::Column.new("simple", "text"),
+      DD::Column.new("test", "int")
     ] }
 
     it "correctly parses the database" do
