@@ -3,6 +3,7 @@
 module DatDirec
   class Database
     attr_reader :type
+    attr_accessor :name
 
     def initialize(type, tables: nil)
       @type = type
