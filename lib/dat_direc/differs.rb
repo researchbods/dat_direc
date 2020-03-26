@@ -6,8 +6,8 @@ module DatDirec
   #
   # If I knew more about physics this would be some kind of reference to the
   # works of Dirac
-  module Sieves
+  module Differs
   end
 end
 
-Dir[File.dirname(__FILE__) + "/sieves/*.rb"].sort.each { |f| require f }
+Dir[File.dirname(__FILE__) + "/differs/*.rb"].sort.each { |f| require f }
