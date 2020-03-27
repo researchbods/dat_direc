@@ -116,7 +116,7 @@ RSpec.describe DatDirec::DumpParsers::MySQL::ColumnParser do
     include_examples "auto_incrementable"
   end
 
-  shared_examples_for "column" do |name:, type: |
+  shared_examples_for "column" do |name:, type:|
     generic_type = described_class.generic_type(type)
     include_examples "options"
 

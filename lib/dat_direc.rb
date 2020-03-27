@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# DatDirec is a database difference reconciler.
+# DatDirec is a database difference reconciler.
 # If you have N installs of an application all with slightly different database
 # structures, and you want to have N installs with the *same* database structure
 # this tool is for you!
@@ -29,5 +29,5 @@ require "dat_direc/core/database"
 require "dat_direc/core/column"
 require "dat_direc/core/index"
 require "dat_direc/core/table"
-#require "dat_direc/migration_generators"
+# require "dat_direc/migration_generators"
 require "dat_direc/dump_parsers"

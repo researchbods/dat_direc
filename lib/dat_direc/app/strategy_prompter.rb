@@ -7,7 +7,7 @@ module DatDirec
     class StrategyPrompter
       include Thor::Shell
 
-      def initialize(diff,  debug: false)
+      def initialize(diff, debug: false)
         @debug = debug
         @diff = diff
       end

@@ -11,6 +11,10 @@
 AllCops:
   TargetRubyVersion: 2.3
 
+Layout/LineLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*_spec.rb'

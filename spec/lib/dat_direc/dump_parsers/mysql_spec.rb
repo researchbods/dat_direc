@@ -26,13 +26,15 @@ RSpec.describe DatDirec::DumpParsers::MySQL do
 
     let(:expected) { DD::Database.new(:mysql, tables: [creams]) }
     let(:creams) { DD::Table.new("creams", columns: creams_columns) }
-    let(:creams_columns) { [
-      DD::Column.new("id", "int", limit: 11, null: false, auto_increment: true),
-      DD::Column.new("name", "string", limit: 255, null: false, default: ""),
-      DD::Column.new("consistency", "float", limit: 11, decimal: 4, null: false),
-      DD::Column.new("simple", "text"),
-      DD::Column.new("test", "int")
-    ] }
+    let(:creams_columns) do
+      [
+        DD::Column.new("id", "int", limit: 11, null: false, auto_increment: true),
+        DD::Column.new("name", "string", limit: 255, null: false, default: ""),
+        DD::Column.new("consistency", "float", limit: 11, decimal: 4, null: false),
+        DD::Column.new("simple", "text"),
+        DD::Column.new("test", "int")
+      ]
+    end
 
     it "correctly parses the database" do
       res = subject
