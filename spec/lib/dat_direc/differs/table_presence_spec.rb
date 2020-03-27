@@ -5,7 +5,6 @@ require "dat_direc/core/table"
 require "dat_direc/differs/table_presence"
 
 RSpec.describe DatDirec::Differs::TablePresence do
-  DD = DatDirec
   describe "#differences" do
     subject { described_class.new(databases).diff }
 

@@ -6,8 +6,6 @@ require "dat_direc/core/column"
 require "dat_direc/dump_parsers/mysql"
 
 RSpec.describe DatDirec::DumpParsers::MySQL do
-  DD = DatDirec
-
   subject { described_class.new(io).parse }
 
   let(:io) { StringIO.new(_sql) }
