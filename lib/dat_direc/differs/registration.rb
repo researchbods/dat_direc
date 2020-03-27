@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module DatDirec
+  # Classes which test a set of databases to determine the differences
+  # between them.
+  #
+  # There'll be a protocol description here soon
+  #
+  # If I knew more about physics this would be some kind of reference to the
+  # works of Dirac
   module Differs
     class << self
       # registers a differ. specify before/after to ensure the differs end up in

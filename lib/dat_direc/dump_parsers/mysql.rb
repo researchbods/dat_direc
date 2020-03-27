@@ -8,6 +8,10 @@ require "dat_direc/dump_parsers/registration"
 
 module DatDirec
   module DumpParsers
+    # Parses dump files produced by mysqldump.
+    #
+    # The dumps must have MySQL (case-insensitive) in the first line in order to
+    # get detected as a MySQL dump
     class MySQL
       def self.detect(io)
         res = io.gets&.downcase&.include?("mysql")

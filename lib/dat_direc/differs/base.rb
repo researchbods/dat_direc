@@ -2,6 +2,11 @@
 
 module DatDirec
   module Differs
+    # Base class to make implementing differs easier.
+    #
+    # Subclasses must implement the class method #priority returning a number
+    # (where a lower number means the differ runs earlier) and the instance
+    # method #diff, which performs the diff. See TablePresence for an example
     class Base
       def initialize(databases)
         @databases = databases

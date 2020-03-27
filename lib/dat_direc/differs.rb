@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DatDirec
-  # classes which test a set of databases to determine the differences
+  # Classes which test a set of databases to determine the differences
   # between them.
   #
   # There'll be a protocol description here soon

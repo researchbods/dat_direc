@@ -10,6 +10,9 @@ module DatDirec
     # Checks that databases all have the same list of tables
     class TablePresence < Base
       def self.priority
+        # TablePresence has a low priority because it needs to run earliest - no
+        # point comparing a column across the databases if it's in a table
+        # that's going to be removed.
         0
       end
 
@@ -59,6 +62,7 @@ module DatDirec
         end
       end
 
+      # The Diff returned by TablePresence#diff
       class TableDiff < Diff
         attr_reader :table
 

@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 module DatDirec
+  # Engine-agnostic representation of a database
+  # this is the outer-most structure used to represent a set of tables within
+  # the same database. the database may optionally have a name - this is only
+  # used to identify which databases have which versions of columns etc. in the
+  # diffs, so the name itself isn't of great importance.
   class Database
     attr_reader :type
     attr_accessor :name
