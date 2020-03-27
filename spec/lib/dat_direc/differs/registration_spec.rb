@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/differs/registration"
 
 RSpec.describe DatDirec::Differs do

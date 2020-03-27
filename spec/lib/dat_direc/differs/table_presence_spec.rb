@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/core/database"
 require "dat_direc/core/table"
 require "dat_direc/differs/table_presence"

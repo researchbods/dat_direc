@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/core/diff"
 require "dat_direc/differs/registration"
 require "dat_direc/differs/base"

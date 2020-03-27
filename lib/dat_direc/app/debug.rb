@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/dump_parsers/mysql"
 require "dat_direc/differs"
 require "pp"

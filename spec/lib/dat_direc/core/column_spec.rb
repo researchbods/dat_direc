@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/core/column"
 
 RSpec.describe DatDirec::Column do

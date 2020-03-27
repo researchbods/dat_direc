@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "thor"
 require "dat_direc/app/debug"
 require "dat_direc/differs"

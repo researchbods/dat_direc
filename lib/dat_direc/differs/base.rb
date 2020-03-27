@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DatDirec
   module Differs
     class Base

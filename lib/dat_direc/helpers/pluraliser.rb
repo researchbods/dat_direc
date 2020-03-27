@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module DatDirec
   module Helpers
     module Pluraliser
-      # this is a very simple pluraliser
+      # this is a very simple pluraliser
       # we can always switch it out for ActiveSupport's Inflector if needed
       def pluralise(n, word)
         if n == 1
