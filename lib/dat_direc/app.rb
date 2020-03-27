@@ -35,8 +35,10 @@ module DatDirec
       def decide(*files)
         parse_databases(files)
         diff_databases
-        @diff.each_with_index do |d, idx|
-          prompt_for_action(d, idx, @diff.size)
+        @diff.each_with_index do |diff, idx|
+          res = execute_strategy(diff, idx, @diff.size)
+
+          break if res == :exit
         end
       end
 
@@ -52,62 +54,23 @@ module DatDirec
 
       private
 
-      def prompt_for_action(diff, idx, count)
-        loop do
-          actions = actions_for(diff)
-
-          say("(#{idx}/#{count}) #{diff.description}", :bold)
-          action = ask("    How do we reconcile this?", :bold, limited_to: actions)
-          say("")
-
-          action = handle_builtin_action(diff, action)
-          break action unless action.nil?
+      def execute_strategy(diff, idx)
+        strat = StrategyDecider.new(diff, debug: debug)
+                               .prompt_for_strategy(idx: idx, count: @diff.size)
+        if strat == "save"
+          save
+          :exit
+        else
+          diff.strategy(stategy).execute
         end
       end
 
-      BUILTIN_ACTIONS = {
-        "details" => :handle_details,
-        "save" => :handle_save,
-        "help" => :handle_help,
-      }.freeze
-
-      def handle_builtin_action(diff, action)
-        handler = BUILTIN_ACTIONS[action]
-        return action if handler.nil?
-
-        send(handler, diff)
-        nil
-      end
-
-      def handle_details(diff)
-        say(diff.details.to_s + "\n\n")
-      end
-
-      def handle_save(_diff)
-        say("    saving is not supported yet\n\n")
-      end
-
-      def handle_help(diff)
-        help_text = ["Actions available:"]
-        help_text << "  help - output this help text!"
-        help_text << "  details - output detailed information about the diff" if diff.respond_to?(:details)
-        help_text << "  save - saves all decisions made so far and quits"
-        help_text += diff.strategies.map(&:help_text)
-        say("    " + help_text.join("\n    ") + "\n\n")
-      end
-
-      def actions_for(diff)
-        actions = diff.strategies.map(&:name)
-        actions << "details" if diff.respond_to?(:details)
-        actions << "save"
-        actions << "help"
-        actions
+      def save
+        puts "saving is not supported"
       end
 
       def debug_say(*args)
-        if options[:debug]
-          say(*args)
-        end
+        say(*args) if options[:debug]
       end
 
       def parse_databases(files)

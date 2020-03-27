@@ -83,7 +83,6 @@ module DatDirec
           key = read_to_next(" ")
           error! "Unexpected '#{key}' - expecting KEY" if key != "KEY"
         end
-
       end
     end
   end
