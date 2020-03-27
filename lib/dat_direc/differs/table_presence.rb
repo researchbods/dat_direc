@@ -1,10 +1,16 @@
-require "dat_direc/core/base_diff"
+require "dat_direc/core/diff"
+require "dat_direc/differs/registration"
 require "dat_direc/differs/base"
+require "terminal-table"
 
 module DatDirec
   module Differs
     # Checks that databases all have the same list of tables
     class TablePresence < Base
+      def self.priority
+        0
+      end
+
       def diff
         @diff = tables.map do |table|
           diff_for(table)
@@ -51,7 +57,7 @@ module DatDirec
         end
       end
 
-      class TableDiff < BaseDiff
+      class TableDiff < Diff
         attr_reader :table
 
         def initialize(table, states)
@@ -67,12 +73,57 @@ module DatDirec
           end
         end
 
-        # returns array of databases where the table was found
+        def details
+          data = [databases_found.map(&:name),
+                  databases_not_found.map(&:name)]
+
+          Terminal::Table.new(headings: ["Found in", "Not found in"],
+                              rows: transpose(data))
+        end
+
+        # Transposes array-of-arrays, filling gaps with nil.
+        # e.g. turns the following array:
+        # [
+        #   [ "found 1", "found 2", "found 3" ]
+        #   [ "not found 1" ]
+        # ]
+        # into the following:
+        # [
+        #   [ "found 1", "not found 1" ]
+        #   [ "found 2", nil ]
+        #   [ "found 3", nil ]
+        # ]
+        #
+        # There is a more compact implementation (.reduce(&:zip).map(&:flatten))
+        # but that truncates arrays where the first array is not the longest.
+        # e.g.
+        # [
+        #   []
+        #   [ "not found 1" ]
+        # ]
+        # becomes [] instead of [[nil, "not found 1"]]
+        #
+        # my transpose implementation handles the latter case properly,
+        # returning [[nil, "not found 1"]]
+        #
+        # TODO: refactor into a helper or into Diff it's useful elsewhere
+        def transpose(arr)
+          rows = arr.map(&:size).max
+          cols = arr.size
+
+          (0...rows).to_a.map do |row|
+            (0...cols).to_a.map do |col|
+              arr[col][row]
+            end
+          end
+        end
+
+        # returns array of databases where the table was found
         def databases_found
           states.select(&:found?).map(&:database)
         end
 
-        # returns array of databases where the table was not found
+        # returns array of databases where the table was not found
         def databases_not_found
           states.reject(&:found?).map(&:database)
         end
@@ -88,3 +139,4 @@ module DatDirec
     end
   end
 end
+DatDirec::Differs.register DatDirec::Differs::TablePresence

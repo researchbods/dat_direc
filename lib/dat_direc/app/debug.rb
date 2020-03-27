@@ -1,4 +1,5 @@
 require "dat_direc/dump_parsers/mysql"
+require "dat_direc/differs"
 require "pp"
 
 module DatDirec
@@ -21,6 +22,11 @@ module DatDirec
           end.join("\n")}
 
         INFO
+      end
+
+      desc "differs", "Lists off all the differs registered"
+      def differs
+        puts Differs.send(:differs).inspect
       end
     end
   end

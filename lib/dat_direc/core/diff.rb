@@ -3,11 +3,12 @@
 require "dat_direc/helpers/pluraliser"
 
 module DatDirec
-  # subclasses of BaseDiff should either set @strategies during initialize,
+  # subclasses of Diff should either set @strategies during initialize,
   # or override the strategies method
-  class BaseDiff
+  class Diff
     def initialize(states)
       @states = states.freeze
+      @strategies ||= []
     end
 
     def strategy(name)
