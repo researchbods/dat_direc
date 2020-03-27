@@ -14,6 +14,7 @@ module DatDirec
           @pos = 0
           @io = StringIO.new(line)
           @line_no = line_no
+          @name = ""
         end
 
         def parse
@@ -21,7 +22,7 @@ module DatDirec
           parse_name if @type != "primary"
           parse_columns
 
-          Index.new(name: @name || "",
+          Index.new(name: @name,
                     columns: @columns,
                     type: @type,
                     options: options)
