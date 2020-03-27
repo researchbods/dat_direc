@@ -2,7 +2,7 @@
 
 require "dat_direc/dump_parsers/mysql/column_parser"
 
-describe DatDirec::DumpParsers::MySQL::ColumnParser do
+RSpec.describe DatDirec::DumpParsers::MySQL::ColumnParser do
   subject { described_class.new(line + extras, line_no).parse }
   let(:line_no) { 1 }
   let(:extras) { " " + [collate, null, default, auto_increment].compact.join(" ") + "," }
