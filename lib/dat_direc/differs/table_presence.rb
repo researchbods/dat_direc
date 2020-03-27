@@ -1,5 +1,5 @@
+require "dat_direc/core/base_diff"
 require "dat_direc/differs/base"
-require "dat_direc/differs/base_diff"
 
 module DatDirec
   module Differs
