@@ -34,7 +34,9 @@ module DatDirec
         def options
           @options ||= begin
                          opts = {}
-                         opts[:length] = @column_lengths unless @column_lengths.empty?
+                         unless @column_lengths.empty?
+                           opts[:length] = @column_lengths
+                         end
                          opts
                        end
         end
