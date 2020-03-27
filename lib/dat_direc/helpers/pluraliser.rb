@@ -2,14 +2,17 @@
 
 module DatDirec
   module Helpers
+    # Helper for pluralising words
     module Pluraliser
-      # this is a very simple pluraliser
-      # we can always switch it out for ActiveSupport's Inflector if needed
-      def pluralise(n, word)
-        if n == 1
-          "#{n} #{word}"
+      # Outputs a number and a word, with the word pluralised if needed. The
+      # pluralisation is very simple - literally just adding an 's'. If we need
+      # more complex pluralisation then we should probably just throw this away
+      # and use ActiveSupport::Inflector
+      def pluralise(num, word)
+        if num == 1
+          "#{num} #{word}"
         else
-          "#{n} #{word}s"
+          "#{num} #{word}s"
         end
       end
     end
