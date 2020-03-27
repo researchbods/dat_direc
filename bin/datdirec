@@ -3,5 +3,10 @@
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
+trap "SIGINT" do
+  puts "Exiting"
+  exit 130
+end
+
 require "dat_direc/app"
 DatDirec::CLI::App.start
