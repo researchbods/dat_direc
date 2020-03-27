@@ -58,5 +58,36 @@ RSpec.describe DatDirec::Differs::TablePresence do
         end
       end
     end
+
+    context "with 5 databases" do
+      let(:databases) { %w[a b c d e].map { |name| DD::Database.new("fake_db_engine", name: name) } }
+      let(:common_table) { DD::Table.new("common") }
+      let(:table_a) { DD::Table.new("a") }
+      let(:table_b) { DD::Table.new("b") }
+      before do
+        databases.each { |db| db.add_table common_table.dup }
+        databases[0..2].each { |db| db.add_table table_a.dup }
+        databases[2..3].each { |db| db.add_table table_b.dup }
+      end
+
+      it "does not return a diff for common table" do
+        common_diff = subject.find { |d| d.table == "common" }
+        expect(common_diff).to be nil
+      end
+
+      it "returns a diff for table a" do
+        diff_a = subject.find { |d| d.table == "a" }
+        expect(diff_a.description).to eq "Table 'a' found in 3 databases, but not in 2 other databases"
+        expect(diff_a.databases_found).to eq databases[0..2]
+        expect(diff_a.databases_not_found).to eq databases[3..4]
+      end
+
+      it "returns a diff for table b" do
+        diff_b = subject.find { |d| d.table == "b" }
+        expect(diff_b.description).to eq "Table 'b' not found in 3 databases, but found in 2 other databases"
+        expect(diff_b.databases_found).to eq databases[2..3]
+        expect(diff_b.databases_not_found).to eq [databases[0], databases[1], databases[4]]
+      end
+    end
   end
 end
