@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.license = "MIT"
 
+  s.add_dependency "terminal-table", "~> 1.8"
   s.add_dependency "thor", "~> 1.0"
 
   s.add_development_dependency "fuubar", "~> 2.3"
