@@ -24,9 +24,9 @@ module DatDirec
 
       def diff_for(table)
         TableDiff.new(table,
-                   databases.map do |db|
-                     state_for(db, table)
-                   end)
+                      databases.map do |db|
+                        state_for(db, table)
+                      end)
       end
 
       def state_for(db, table_name)
@@ -38,14 +38,14 @@ module DatDirec
       end
 
       # Represents the fact that a table was found on a database
-      class Found < Struct.new(:database, :table)
+      Found = Struct.new(:database, :table) do
         def found?
           true
         end
       end
 
       # Represents the fact that a table was not found on a database
-      class NotFound < Struct.new(:database, :table)
+      NotFound = Struct.new(:database, :table) do
         def found?
           false
         end
