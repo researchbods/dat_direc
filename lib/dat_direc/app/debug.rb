@@ -9,7 +9,7 @@ module DatDirec
     class Debug < Thor
       desc "read FILE", "Reads an SQL file and outputs information about it"
       def read(file)
-        io = File.open(file, 'r')
+        io = File.open(file, "r")
         parser = DumpParsers.find_parser(io).new(io)
         database = parser.parse
 

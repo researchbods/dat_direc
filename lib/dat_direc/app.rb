@@ -109,7 +109,7 @@ module DatDirec
       def parse_databases(files)
         say "Parsing databases..."
         @databases = files.map do |sql|
-          File.open(sql, 'r') do |io|
+          File.open(sql, "r") do |io|
             parser = DatDirec::DumpParsers.find_parser(io)
             if parser
               debug_say("parsing #{sql} using #{parser}")
