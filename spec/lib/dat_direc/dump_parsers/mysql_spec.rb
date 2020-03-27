@@ -66,5 +66,11 @@ RSpec.describe DatDirec::DumpParsers::MySQL do
         expect(io.gets).to eq "-- hello from postgres!\n"
       end
     end
+
+    context "when file is empty" do
+      let(:sql) { "" }
+
+      it { is_expected.to be_falsey }
+    end
   end
 end

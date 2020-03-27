@@ -10,7 +10,7 @@ module DatDirec
   module DumpParsers
     class MySQL
       def self.detect(io)
-        res = io.gets.downcase.include?("mysql")
+        res = io.gets&.downcase&.include?("mysql")
         io.rewind
         res
       end
