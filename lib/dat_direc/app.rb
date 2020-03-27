@@ -3,10 +3,14 @@
 require "thor"
 require "dat_direc/app/debug"
 require "dat_direc/differs"
+require "dat_direc/app/strategy_prompter"
 
 module DatDirec
   # command line interface for DatDirec
   module CLI
+    # Main application for DatDirec.
+    # As much as possible functionality should be extracted out to subcommands -
+    # see Debug for an example.
     class App < Thor
       class_option :debug, type: :boolean
 

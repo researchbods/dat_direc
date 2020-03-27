@@ -6,22 +6,26 @@ require "pp"
 
 module DatDirec
   module CLI
+    # Debug commands that I found useful while working on DatDirec.
+    # Likely to be brittle and get thrown away before 1.0
     class Debug < Thor
       desc "read FILE", "Reads an SQL file and outputs information about it"
       def read(file)
         io = File.open(file, "r")
         parser = DumpParsers.find_parser(io).new(io)
         database = parser.parse
+        tables = database.tables.values.map do |table|
+          "#{table.name} " \
+            "(#{table.columns.count} columns, #{table.indexes.count} indexes)"
+        end
 
         puts <<~INFO
-          SQL file is for a #{parser.name} database with #{database.tables.count} tables.
+          #{parser.name} database with #{database.tables.count} tables.
 
           Tables
           ------
 
-          #{database.tables.values.map do |table|
-            "#{table.name} (#{table.columns.count} columns, #{table.indexes.count} indexes)"
-          end.join("\n")}
+          #{tables.join("\n")}
 
         INFO
       end
