@@ -50,13 +50,13 @@ module DatDirec
       def help_text
         @help_text ||=
           begin
-            help_text = ["Actions available:"]
-            help_text << "  help - output this help text!"
+            text = ["Actions available:"]
+            text << "  help - output this help text!"
             if diff.respond_to?(:details)
-              help_text << "  details - output detailed information about this diff"
+              text << "  details - output detailed information about this diff"
             end
-            help_text << "  save - saves all decisions made so far and quits"
-            help_text + diff.strategies.map(&:help_text)
+            text << "  save - saves all decisions made so far and quits"
+            text + diff.strategies.map(&:help_text)
           end
       end
 
