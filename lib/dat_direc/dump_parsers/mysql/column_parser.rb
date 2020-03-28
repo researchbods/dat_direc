@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "dat_direc/dump_parsers/parse_helper"
+require "dat_direc/dump_parsers/mysql/column_options_parser"
 require "dat_direc/core/column"
 
 module DatDirec
@@ -51,9 +52,7 @@ module DatDirec
           type = read_to_next(" ")
           raise "'#{type}' did not match the regex" unless type =~ TYPE_REGEX
 
-          type = Regexp.last_match[1]
-          limit = Regexp.last_match[2]
-          decimal = Regexp.last_match[3]
+          type, limit, decimal = Regexp.last_match[1..3]
 
           @type = type
           options[:limit] = Integer(limit) if limit
@@ -61,64 +60,7 @@ module DatDirec
         end
 
         def parse_options
-          words = @io.read.chomp.chomp(",").split(" ")
-          debug "words starts as #{words}"
-          words = parse_collate(words) unless words.empty?
-          words = parse_null(words) unless words.empty?
-          words = parse_default(words) unless words.empty?
-          words = parse_auto_increment(words) unless words.empty?
-
-          debug "Unsupported extra bits: #{words.join(' ')}" unless words.empty?
-        end
-
-        def parse_collate(words)
-          debug "parse_collate '#{words.join("', '")}'"
-          if words[0]&.upcase == "COLLATE"
-            debug "collate!"
-            options[:collate] = words[1]
-            words.slice(2, words.count)
-          else
-            words
-          end
-        end
-
-        def parse_null(words)
-          debug "parse_null '#{words.join("', '")}'"
-          if words[0]&.upcase == "NOT" && words[1]&.upcase == "NULL"
-            options[:null] = false
-            words.slice(2, words.count)
-          elsif words[0]&.upcase == "NULL"
-            options[:null] = true
-            words.slice(1, words.count)
-          else
-            words
-          end
-        end
-
-        def parse_default(words)
-          debug "parse_default '#{words.join("', '")}'"
-          if words[0]&.upcase == "DEFAULT"
-            if words[1]&.upcase == "NULL"
-              options[:default] = nil
-              words.slice(2, words.count)
-            else
-              chrs = StringIO.new(words.slice(1, words.count).join(" "))
-              getc("'", io: chrs)
-              options[:default] = read_to_next("'", io: chrs)
-              chrs.read.split(" ")
-            end
-          else
-            words
-          end
-        end
-
-        def parse_auto_increment(words)
-          debug "parse_auto_increment '#{words.join("', '")}'"
-          if words[0]&.upcase == "AUTO_INCREMENT"
-            options[:auto_increment] = true
-            words.slice(1, words.count)
-          else words
-          end
+          options.merge!(ColumnOptionsParser.new(@io).parse)
         end
 
         def generic_type
