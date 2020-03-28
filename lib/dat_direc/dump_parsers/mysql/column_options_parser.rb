@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "dat_direc/dump_parsers/parse_helper"
 
 module DatDirec
@@ -21,8 +23,9 @@ module DatDirec
         # - some kind of hash-y structure like this
         # OPTIONS = {
         #   [ "COLLATE", :string ] => ->(arg){ options[:collation] = arg },
-        #   [ "CHARACTER", "SET", :string ] => ->(arg) { options[:character_set] =
-        #   arg },
+        #   [ "CHARACTER", "SET", :string ] => ->(arg) {
+        #     options[:character_set] = arg
+        #   },
         #   [ "NOT", "NULL" ] => -> { options[:null] = false },
         #   [ "NULL" ] => -> { options[:null] = true },
         #   [ "AUTO_INCREMENT" ] => -> { options[:auto_increment] = true },
