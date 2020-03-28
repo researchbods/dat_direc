@@ -17,7 +17,7 @@ module DatDirec
       end
 
       def diff
-        @diff = tables.map do |table|
+        @diff = table_names.map do |table|
           diff_for(table)
         end
 
