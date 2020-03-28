@@ -17,17 +17,17 @@ module DatDirec
       attr_reader :databases
 
       # this could probably be refactored into a Databases class - so it only
-      # needs calculate
-      def tables
-        @tables ||= begin
-                      tables = Set.new
-                      databases.each do |db|
-                        db.tables.keys.each do |tbl|
-                          tables << tbl
-                        end
-                      end
-                      tables
-                    end
+      # needs calculating once during the program's run
+      def table_names
+        @table_names ||= begin
+                           tables = Set.new
+                           databases.each do |db|
+                             db.tables.keys.each do |tbl|
+                               tables << tbl
+                             end
+                           end
+                           tables
+                         end
       end
     end
   end
