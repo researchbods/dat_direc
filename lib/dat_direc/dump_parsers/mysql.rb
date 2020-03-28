@@ -43,6 +43,12 @@ module DatDirec
 
       COLUMNS_REGEXP = /^\s*`([^`]*)`/.freeze
 
+      # If parse_line gets any larger we'll have to think about how to refactor
+      # it. If it gets too complex it's definitely worth doing - but here it has
+      # managed to remain simple enough while growing a bit longer than ideal.
+      #
+      # rubocop:disable Metrics/MethodLength
+
       def parse_line(line)
         case line.strip
         when /^CREATE TABLE `(.*)`/
@@ -58,6 +64,7 @@ module DatDirec
           @table = nil
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def parse_key(line)
         KeyParser.new(line, @line_no).parse

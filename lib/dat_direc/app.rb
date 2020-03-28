@@ -17,7 +17,8 @@ module DatDirec
       desc "debug", "Debug tools used during development of DatDirec"
       subcommand "debug", Debug
 
-      desc "diff FILE...", "Discovers the differences between a number of database structures"
+      desc "diff FILE...",
+           "Discovers the differences between a number of database structures"
       def diff(*files)
         parse_databases(files)
 
@@ -31,7 +32,9 @@ module DatDirec
         end
       end
 
-      desc "decide", "Prompts you for decisions on what actions to take to reconcile the differences found"
+      desc "decide",
+           "Prompts you for decisions on what actions to take" \
+           "to reconcile the differences found"
       def decide(*files)
         parse_databases(files)
         diff_databases
@@ -42,7 +45,8 @@ module DatDirec
         end
       end
 
-      desc "generate", "Generates migrations to reconcile the differences in the databases"
+      desc "generate",
+           "Generates migrations to reconcile the differences in the databases"
       method_option :decisions_file, type: :string, default: nil
       def generate
         invoke "decide" if options[:decisions_file].nil?
@@ -77,17 +81,21 @@ module DatDirec
         say "Parsing databases..."
         @databases = files.map do |sql|
           File.open(sql, "r") do |io|
-            parser = DatDirec::DumpParsers.find_parser(io)
-            if parser
-              debug_say("parsing #{sql} using #{parser}")
-              db = parser.new(io).parse
-              db.name = File.basename(sql)
-              db
-            else
-              debug_say("couldn't find a parser for #{sql} - ignoring this file")
-              nil
-            end
+            parse_db(io)
           end
+        end
+      end
+
+      def parse_db(io)
+        parser = DatDirec::DumpParsers.find_parser(io)
+        if parser
+          debug_say("parsing #{sql} using #{parser}")
+          db = parser.new(io).parse
+          db.name = File.basename(sql)
+          db
+        else
+          debug_say("couldn't find a parser for #{sql} - ignoring this file")
+          nil
         end
       end
 

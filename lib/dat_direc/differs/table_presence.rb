@@ -73,9 +73,12 @@ module DatDirec
 
         def description
           if times_found >= times_not_found
-            "Table '#{table}' found in #{pluralise(times_found, 'database')}, but not in #{pluralise(times_not_found, 'other database')}"
+            "Table '#{table}' found in #{pluralise(times_found, 'database')}, "\
+              "but not in #{pluralise(times_not_found, 'other database')}"
           else
-            "Table '#{table}' not found in #{pluralise(times_not_found, 'database')}, but found in #{pluralise(times_found, 'other database')}"
+            "Table '#{table}' not found in " \
+              "#{pluralise(times_not_found, 'database')}, but found in " \
+              "#{pluralise(times_found, 'other database')}"
           end
         end
 

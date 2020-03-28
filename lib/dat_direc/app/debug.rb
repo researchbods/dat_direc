@@ -4,6 +4,8 @@ require "dat_direc/dump_parsers/mysql"
 require "dat_direc/differs"
 require "pp"
 
+# rubocop:disable Metrics/AbcSize Metrics/MethodLength
+
 module DatDirec
   module CLI
     # Debug commands that I found useful while working on DatDirec.
@@ -37,3 +39,5 @@ module DatDirec
     end
   end
 end
+
+# rubocop:enable Metrics/AbcSize Metrics/MethodLength
