@@ -26,6 +26,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard-rubocop", "~> 1.3"
   s.add_development_dependency "rspec", "~> 3.8"
   s.add_development_dependency "rubocop", "~> 0.79"
+  # 0.18 incompatible with codeclimate for now
+  s.add_development_dependency "simplecov", "< 0.18"
 
   s.files = Dir[
     "lib/**/*",
