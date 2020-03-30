@@ -15,6 +15,8 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require "simplecov"
+SimpleCov.start
 require "dat_direc"
 DD = DatDirec
 RSpec.configure do |config|
