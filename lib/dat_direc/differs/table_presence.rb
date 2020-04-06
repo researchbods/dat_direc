@@ -10,9 +10,9 @@ module DatDirec
       # Checks that databases all have the same list of tables
       class Differ < Base
         def self.priority
-          # TablePresence has a low priority because it needs to run earliest - no
-          # point comparing a column across the databases if it's in a table
-          # that's going to be removed.
+          # TablePresence has a low priority because it needs to run earliest
+          # - no point comparing a column across the databases if it's in a
+          # table that's going to be removed.
           0
         end
 
@@ -47,7 +47,6 @@ module DatDirec
             NotFound.new(db, table_name)
           end
         end
-
       end
 
       # Represents the fact that a table was found on a database

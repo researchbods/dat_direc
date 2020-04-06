@@ -3,6 +3,8 @@
 module DatDirec
   module MigrationGenerators
     class ActiveRecord
+      # Generates an ActiveRecord to create a table, if it does not already
+      # exist.
       class CreateTable
         def initialize(migration)
           @table = migration.table

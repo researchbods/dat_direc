@@ -25,7 +25,7 @@ module DatDirec
 
       def generate_file(migrations)
         <<~MIGRATION
-          class DatDirecMigration#{Time.now.strftime("%Y%m%d%H%M")} < ActiveRecord::Migration
+          class DatDirecMigration#{Time.now.strftime('%Y%m%d%H%M')} < ActiveRecord::Migration
             def up
               #{migrations.map(&method(:generate_up)).join("\n\n    ")}
             end
