@@ -15,5 +15,7 @@ module DatDirec
   # not 100% on this yet since I haven't (at time of writing) written any
   # ReconciliationStrategies, Migrations, or MigrationGenerators
   module Migrations
+    CreateTable = Struct.new(:table)
+    DropTable = Struct.new(:table_name)
   end
 end

@@ -12,7 +12,20 @@ module DatDirec
     end
 
     def strategy(name)
-      strategies.find { |x| x.name == name }.new(self)
+      strategies.find { |x| x.name == name }&.new(self)
+    end
+
+    def description
+      "A summary of the diff should be here, but the implementor of " \
+        "#{self.class.name} did not provide one"
+    end
+
+    def details
+      <<~DETAILS
+        Longer-form information about the differences between the databases
+        should be here, but the implementor of #{self.class.name} did not
+        provide any
+      DETAILS
     end
 
     attr_reader :states, :strategies
