@@ -7,7 +7,7 @@ require "terminal-table"
 
 module DatDirec
   module Differs
-    class TablePresence
+    module TablePresence
       # The Diff returned by TablePresence#diff
       class TableDiff < Diff
         attr_reader :table

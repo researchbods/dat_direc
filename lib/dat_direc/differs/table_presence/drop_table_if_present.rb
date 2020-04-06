@@ -2,7 +2,7 @@
 
 module DatDirec
   module Differs
-    class TablePresence
+    module TablePresence
       class DropTableIfPresent
         def self.strategy_name
           "drop"

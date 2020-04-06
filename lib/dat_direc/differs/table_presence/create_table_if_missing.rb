@@ -2,10 +2,16 @@
 
 module DatDirec
   module Differs
-    class TablePresence
-      class CreateTableWhenMissing
+    module TablePresence
+      # Migration strategy for creating a table which is missing on some
+      # databases
+      class CreateTableIfMissing
         def self.strategy_name
           "create"
+        end
+
+        def self.help_text
+          "creates the table if it is not found"
         end
 
         def initialize(diff)
