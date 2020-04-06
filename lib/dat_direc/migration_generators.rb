@@ -23,3 +23,6 @@ module DatDirec
   module MigrationGenerators
   end
 end
+Dir[File.dirname(__FILE__) + "/migration_generators/*.rb"]
+  .sort
+  .each { |f| require f }

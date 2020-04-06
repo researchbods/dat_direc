@@ -10,8 +10,7 @@ module DatDirec
   # works of Dirac
   module Differs
     class << self
-      # registers a differ. specify before/after to ensure the differs end up in
-      # the right order
+      # registers a differ.
       def register(differ)
         unless differ.respond_to?(:priority)
           raise "#{differ} does not respond to #priority"
