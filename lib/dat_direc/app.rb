@@ -4,6 +4,7 @@ require "thor"
 require "dat_direc/app/debug"
 require "dat_direc/differs"
 require "dat_direc/app/strategy_prompter"
+require "dat_direc/migration_generators"
 
 module DatDirec
   # command line interface for DatDirec
@@ -39,17 +40,37 @@ module DatDirec
         parse_databases(files)
         diff_databases
         @diff.each_with_index do |diff, idx|
-          res = execute_strategy(diff, idx, @diff.size)
+          migration = execute_strategy(diff, idx)
+          break if migration == :exit
 
-          break if res == :exit
+          puts migration.inspect
         end
       end
 
       desc "generate",
            "Generates migrations to reconcile the differences in the databases"
-      method_option :decisions_file, type: :string, default: nil
-      def generate
-        invoke "decide" if options[:decisions_file].nil?
+      def generate(*files)
+        generator_name = "activerecord"
+        generator = MigrationGenerators[generator_name]
+        puts "activerecord generator: #{generator}"
+        parse_databases(files)
+        diff_databases
+        exiting = false
+        migrations = []
+        @diff.each_with_index do |diff, idx|
+          migration = execute_strategy(diff, idx)
+          if migration == :exit
+            # exiting = true
+            break
+          end
+
+          migrations << migration
+        end
+
+        return if exiting
+
+        debug_say "Migrations: #{migrations.inspect}"
+        say generator.new.generate_file(migrations)
       end
 
       def self.exit_on_failure?
@@ -59,13 +80,19 @@ module DatDirec
       private
 
       def execute_strategy(diff, idx)
-        strat = StrategyDecider.new(diff, debug: debug)
-                               .prompt_for_strategy(idx: idx, count: @diff.size)
+        strat = StrategyPrompter.new(diff, debug: debug)
+                                .prompt_for_strategy(idx: idx,
+                                                     count: @diff.size)
         if strat == "save"
           save
           :exit
         else
-          diff.strategy(stategy).execute
+          s = diff.strategy(strat)
+          debug_say "Strategy '#{strat}': #{s} (strategies available: #{diff.strategies}"
+
+          m = s.migration
+          debug_say "Migration: #{m}"
+          m
         end
       end
 
@@ -88,13 +115,14 @@ module DatDirec
 
       def parse_db(io)
         parser = DatDirec::DumpParsers.find_parser(io)
+        name = File.basename(io.path)
         if parser
-          debug_say("parsing #{sql} using #{parser}")
+          debug_say("parsing #{name} using #{parser}")
           db = parser.new(io).parse
-          db.name = File.basename(sql)
+          db.name = name
           db
         else
-          debug_say("couldn't find a parser for #{sql} - ignoring this file")
+          debug_say("couldn't find a parser for #{name} - ignoring this file")
           nil
         end
       end

@@ -14,7 +14,7 @@ module DatDirec
 
       def prompt_for_strategy(idx: 1, count: 1)
         loop do
-          say("(#{idx}/#{count}) #{diff.description}", :bold)
+          say("(#{idx}/#{count}) #{@diff.description}", :bold)
           action = ask("    How do we reconcile this?",
                        :bold,
                        limited_to: actions)
@@ -27,20 +27,22 @@ module DatDirec
 
       private
 
-      def handle_builtin_action(action)
-        handler = BUILTIN_ACTIONS[action]
-        return action if handler.nil?
-
+      def handle_action(action)
         if action == "details"
           handle_details
+          nil
         elsif action == "help"
           handle_help
+          nil
+        elsif action == "quite"
+          :exit
+        else
+          action
         end
-        nil
       end
 
       def handle_details
-        say "#{diff.details}\n\n"
+        say "#{@diff.details}\n\n"
       end
 
       def handle_help
@@ -50,20 +52,22 @@ module DatDirec
       def help_text
         @help_text ||=
           begin
-            text = ["Actions available:"]
-            text << "  help - output this help text!"
-            if diff.respond_to?(:details)
-              text << "  details - output detailed information about this diff"
+            text = ["Actions available:", ""]
+            text += @diff.strategies.map do |s|
+              "  #{set_color s.strategy_name, :bold, :blue} - #{s.help_text}"
             end
-            text << "  save - saves all decisions made so far and quits"
-            text + diff.strategies.map(&:help_text)
+            text << "  #{set_color "help", :bold, :green } - output this help text!"
+            if @diff.respond_to?(:details)
+              text << "  #{set_color "details", :bold, :green} - output detailed information about this diff"
+            end
+            text << "  #{set_color "save", :bold, :yellow} - saves all decisions made so far and quits"
           end
       end
 
       def actions
         @actions ||= begin
-                       actions = diff.strategies.map(&:name)
-                       actions << "details" if diff.respond_to?(:details)
+                       actions = @diff.strategies.map(&:strategy_name)
+                       actions << "details" if @diff.respond_to?(:details)
                        actions << "save"
                        actions << "help"
                        actions

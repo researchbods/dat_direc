@@ -25,7 +25,9 @@ module DatDirec
         private
 
         def table
-          @diff.databases.first.tables[@diff.table]
+          @diff.databases_found
+               .first
+               .tables[@diff.table]
         end
       end
     end

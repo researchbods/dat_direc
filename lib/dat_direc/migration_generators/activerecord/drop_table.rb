@@ -13,7 +13,7 @@ module DatDirec
                   "Must be initialized with a Migrations::DropTable"
           end
 
-          @table_name = migration
+          @table_name = migration.table_name
         end
 
         def generate_up

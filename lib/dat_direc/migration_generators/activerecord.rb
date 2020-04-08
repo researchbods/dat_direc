@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require "dat_direc/migration_generators/active_record/create_table"
-require "dat_direc/migration_generators/active_record/drop_table"
+require "dat_direc/migration_generators/registration"
+require "dat_direc/migration_generators/activerecord/create_table"
+require "dat_direc/migration_generators/activerecord/drop_table"
 
 module DatDirec
   module MigrationGenerators
@@ -15,7 +16,7 @@ module DatDirec
       }.freeze
 
       def generate_up(migration)
-        generator = GENERATORS[migration]
+        generator = GENERATORS[migration.class]
         if generator.nil?
           return "raise 'Unsupported migration type #{migration.class.name}'"
         end
@@ -27,11 +28,14 @@ module DatDirec
         <<~MIGRATION
           class DatDirecMigration#{Time.now.strftime('%Y%m%d%H%M')} < ActiveRecord::Migration
             def up
-              #{migrations.map(&method(:generate_up)).join("\n\n    ")}
+              #{migrations.map do |m|
+                generate_up(m).split("\n") + ['']
+              end.flatten.join("\n    ")}
             end
           end
         MIGRATION
       end
     end
   end
+  MigrationGenerators.register(MigrationGenerators::ActiveRecord)
 end

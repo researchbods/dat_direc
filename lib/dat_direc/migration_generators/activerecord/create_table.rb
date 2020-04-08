@@ -14,7 +14,7 @@ module DatDirec
           <<~MIGRATION
             unless table_exists?(:#{@table.name})
               create_table :#{@table.name} do |t|
-                #{indent(4, @table.columns.map(&method(:column)))}
+                #{indent(4, @table.columns.values.map(&method(:column)))}
               end
             end
           MIGRATION
@@ -24,7 +24,7 @@ module DatDirec
 
         def indent(indent, array)
           indent = " " * indent
-          indent + array.join("\n#{indent}")
+          array.join("\n#{indent}")
         end
 
         def column(col)

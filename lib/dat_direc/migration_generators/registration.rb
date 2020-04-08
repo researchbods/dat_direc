@@ -10,6 +10,10 @@ module DatDirec
         generators[generator.name.split("::").last.downcase] = generator
       end
 
+      def [](name)
+        generators[name]
+      end
+
       private
 
       def generators

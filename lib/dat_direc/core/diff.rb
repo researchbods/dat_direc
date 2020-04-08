@@ -12,7 +12,7 @@ module DatDirec
     end
 
     def strategy(name)
-      strategies.find { |x| x.name == name }&.new(self)
+      strategies.find { |x| x.strategy_name == name }&.new(self)
     end
 
     def description
