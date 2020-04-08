@@ -32,14 +32,14 @@ RSpec.describe DatDirec::DumpParsers do
     context "when given a non-class object" do
       let(:parser) { 0 }
       it "raises ArgumentError" do
-        expect { subject }.to raise_error(ArgumentError)
+        expect { subject }.to raise_error(DD::DumpParsers::BadParserError)
       end
 
       it "does not change .parsers" do
         expect {
           begin
             subject
-          rescue ArgumentError
+          rescue DD::DumpParsers::BadParserError
             nil
           end
         }.not_to change { described_class.parsers }

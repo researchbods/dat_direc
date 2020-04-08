@@ -34,8 +34,8 @@ module DatDirec
 
     # TODO: test
     def ==(other)
-      name == other.name &&
-        options == other.options &&
+      name.eql?(other.name) &&
+        options.eql?(other.options) &&
         same_columns?(other) &&
         same_indexes?(other)
     end

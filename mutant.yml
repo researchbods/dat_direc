@@ -1,0 +1,5 @@
+includes:
+  - lib
+integration: rspec
+requires:
+  - dat_direc
