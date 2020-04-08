@@ -11,9 +11,9 @@ RSpec.describe DatDirec::Column do
     let(:type) { "string" }
     let(:options) { { limit: 4, null: true, default: "139" } }
     let(:other) { described_class.new(other_name, other_type, **other_options) }
-    let(:other_name) { name }
-    let(:other_type) { type }
-    let(:other_options) { options }
+    let(:other_name) { name.dup }
+    let(:other_type) { type.dup }
+    let(:other_options) { options.dup }
 
     context "when comparing two identical columns" do
       it { is_expected.to be true }
