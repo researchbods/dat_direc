@@ -7,6 +7,9 @@ module DatDirec
       # exist.
       class CreateTable
         def initialize(migration)
+          unless migration.is_a? Migrations::CreateTable
+            raise UnsupportedMigrationError, migration
+          end
           @table = migration.table
         end
 

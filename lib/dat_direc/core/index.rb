@@ -5,6 +5,12 @@ module DatDirec
   class Index
     attr_reader :name, :type, :columns, :options
 
+    # initializes the index
+    #
+    # @param name The index name
+    # @param type The type of index. Must be one of 'primary', 'unique', or
+    #             'index'
+    # @param [Hash] options Options for the index (e.g. length)
     def initialize(name:, type:, columns:, options: {})
       @name = name.dup.freeze
       @type = type.dup.freeze

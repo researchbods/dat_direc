@@ -16,6 +16,8 @@ module DatDirec
   # #parse instance method which takes no arguments and returns a
   # DatDirec::Database (or something that quacks like one)
   module DumpParsers
+    class BadParserError < StandardError; end
+
     class << self
       def parsers
         @parsers ||= Set.new
@@ -27,7 +29,7 @@ module DatDirec
 
       def register_parser(klass)
         unless klass.is_a? Class
-          raise ArgumentError,
+          raise BadParserError,
                 "attempted to register a parser which was not a class"
         end
 

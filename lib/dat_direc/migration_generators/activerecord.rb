@@ -17,9 +17,7 @@ module DatDirec
 
       def generate_up(migration)
         generator = GENERATORS[migration.class]
-        if generator.nil?
-          return "raise 'Unsupported migration type #{migration.class.name}'"
-        end
+        raise UnsuportedMigrationError, migration if generator.nil?
 
         generator.new(migration).generate_up
       end

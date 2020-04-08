@@ -9,8 +9,7 @@ module DatDirec
       class DropTable
         def initialize(migration)
           unless migration.is_a? Migrations::DropTable
-            raise ArgumentError,
-                  "Must be initialized with a Migrations::DropTable"
+            raise UnsupportedMigrationError, migration
           end
 
           @table_name = migration.table_name
