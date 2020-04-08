@@ -53,15 +53,25 @@ module DatDirec
         @help_text ||=
           begin
             text = ["Actions available:", ""]
-            text += @diff.strategies.map do |s|
-              "  #{set_color s.strategy_name, :bold, :blue} - #{s.help_text}"
-            end
-            text << "  #{set_color "help", :bold, :green } - output this help text!"
-            if @diff.respond_to?(:details)
-              text << "  #{set_color "details", :bold, :green} - output detailed information about this diff"
-            end
-            text << "  #{set_color "save", :bold, :yellow} - saves all decisions made so far and quits"
+            text += strategies_help_text
+            help = set_color "help", :bold, :green
+            text << "  #{help} - output this help text!"
+            save = set_color "save", :bold, :yellow
+            text << "  #{save} - saves all decisions made so far and quits"
           end
+      end
+
+      def strategies_help_text
+        @diff.strategies.map do |s|
+          "  #{set_color s.strategy_name, :bold, :blue} - #{s.help_text}"
+        end
+      end
+
+      def details_text
+        return unless @diff.respond_to? :details
+
+        details = set_color "details", :bold, :green
+        text << "  #{details} - output detailed information about this diff"
       end
 
       def actions

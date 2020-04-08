@@ -58,13 +58,13 @@ module DatDirec
         exiting = false
         migrations = []
         @diff.each_with_index do |diff, idx|
-          migration = execute_strategy(diff, idx)
-          if migration == :exit
-            # exiting = true
+          strategy = pick_strategy(diff, idx)
+          if strategy == :exit
+            # exiting = true
             break
           end
 
-          migrations << migration
+          migrations << strategy.migration
         end
 
         return if exiting
@@ -79,7 +79,7 @@ module DatDirec
 
       private
 
-      def execute_strategy(diff, idx)
+      def pick_strategy(diff, idx)
         strat = StrategyPrompter.new(diff, debug: debug)
                                 .prompt_for_strategy(idx: idx,
                                                      count: @diff.size)
@@ -88,7 +88,7 @@ module DatDirec
           :exit
         else
           s = diff.strategy(strat)
-          debug_say "Strategy '#{strat}': #{s} (strategies available: #{diff.strategies}"
+          debug_say "Strategy '#{strat}': #{s} (strategies: #{diff.strategies})"
 
           m = s.migration
           debug_say "Migration: #{m}"
@@ -116,15 +116,15 @@ module DatDirec
       def parse_db(io)
         parser = DatDirec::DumpParsers.find_parser(io)
         name = File.basename(io.path)
-        if parser
-          debug_say("parsing #{name} using #{parser}")
-          db = parser.new(io).parse
-          db.name = name
-          db
-        else
+        unless parser
           debug_say("couldn't find a parser for #{name} - ignoring this file")
-          nil
+          return nil
         end
+
+        debug_say("parsing #{name} using #{parser}")
+        db = parser.new(io).parse
+        db.name = name
+        db
       end
 
       def diff_databases
