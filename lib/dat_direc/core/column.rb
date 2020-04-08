@@ -12,9 +12,9 @@ module DatDirec
 
     # TODO: test
     def ==(other)
-      other.name == name &&
-        other.type == type &&
-        other.options == options
+      other.name.eql?(name) &&
+        other.type.eql?(type) &&
+        other.options.eql?(options)
     end
   end
 end
