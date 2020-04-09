@@ -15,8 +15,13 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require "simplecov"
-SimpleCov.start
+if ENV["COVERAGE"] == true
+  require "simplecov"
+  SimpleCov.start do
+    add_filter 'spec'
+  end
+end
+
 require "dat_direc"
 DD = DatDirec
 RSpec.configure do |config|
