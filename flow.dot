@@ -1,0 +1,112 @@
+digraph {
+  node [ shape=box fontname=Helvetica ]
+  edge [ fontname=Helvetica ]
+  graph [ fontname=Helvetica, fontcolor="#666666", color="#666666"]
+
+  Start [style=rounded, label=<
+      <font face="Fira Code">`datdirec generate [DATABASE ...]`</font>
+  >]
+
+  PrepareMigrationGenerator [ label=<
+    <font face="Fira Code">generator = MigrationGenerators[name]</font><br />
+    (name comes from <font face="Fira Code">--migration-generator</font> flag)
+  >]
+
+  Start -> PrepareMigrationGenerator
+  PrepareMigrationGenerator -> ParseNextDatabase
+
+  subgraph cluster_parsing {
+    style=dotted; label="Parsing databases";
+
+
+    ParseNextDatabase [label=<
+      Open database file as <font face="Fira Code">io</font>
+    >]
+    FindDumpParser [label=<
+      <font face="Fira Code">parser = DumpParser.find(io)</font><br />
+      (finds a class from <font face="Fira Code">DumpParser.parsers</font>)
+    >]
+    DumpParserParse [label=<
+      <font face="Fira Code">parser.parse</font><br />
+    >]
+    Database [ shape=ellipse, label="Database\nAn abstract representation, common\n to all database engines" ]
+    AddDatabaseToList [label=<
+      (<font face="Fira Code">DatDirec::App</font>)<br />Add Database to <font face="Fira Code">databases</font> list
+    >]
+    ParseNextDatabase -> FindDumpParser
+    FindDumpParser -> DumpParserParse
+    DumpParserParse -> Database [ label="Returns" ]
+    Database -> AddDatabaseToList [ label="to" ]
+    AddDatabaseToList -> ParseNextDatabase [ label="If there are more\ndatabases to load" ]
+  }
+
+  RunDiffers [label=<
+    <font face="Fira Code">Differs.diff(databases)</font>
+  >]
+
+  AddDatabaseToList -> RunDiffers [ label="All databases loaded" ]
+  RunDiffers -> RunNextDiffer
+
+  subgraph cluster_diffing {
+    style=dotted; label="Diffing and Strategising"
+
+    RunNextDiffer
+    Diff [ shape=ellipse, label="some instance of\na subclass of BaseDiff"]
+    PickStrategy [ shape=diamond, label=<
+      User picks strategy <font face="Fira Code">name</font><br />
+      from <font face="Fira Code">diff#strategies</font>
+    >]
+    CallStrategy [label=<
+      <font face="Fira Code">Diff.strategy(name)</font>
+    >]
+    MigrationA [ shape=ellipse ]
+    MigrationB [ shape=ellipse ]
+    MigrationC [ shape=ellipse ]
+
+    AddMigration [ label=<
+      Add Migration to <font face="Fira Code">migrations</font>
+    >]
+    RemoveObsoletedDiffers [ label="Remove obsoleted differs" ]
+
+    RunNextDiffer -> Diff [ label="Returns" ]
+    Diff -> PickStrategy [ label="#strategies populates\nstrategy choices" ]
+    PickStrategy -> CallStrategy
+    CallStrategy -> StrategyA [ label="Returns one of", labelfloat=9000 ]
+    CallStrategy -> StrategyB
+    CallStrategy -> StrategyC
+    RemoveObsoletedDiffers -> RunNextDiffer [label="If there are\nmore differs to run"]
+    MigrationA -> AddMigration
+    MigrationB -> AddMigration
+    MigrationC -> AddMigration
+    AddMigration -> RemoveObsoletedDiffers
+
+    subgraph cluster_migrations {
+      label=<
+      Abstract migrations (in <font face="Fira Code">DatDirec::Migrations</font>)
+      >
+      style=dashed
+      newrank = true
+      MigrationA
+      MigrationB
+      MigrationC
+    }
+    subgraph cluster_strats {
+      style=dashed
+      label="Strategies (unique to a particular Diff type)";
+      newrank = true
+      StrategyA -> MigrationA [ label="#migration" ]
+      StrategyB -> MigrationB [ label="#migration" ]
+      StrategyC -> MigrationC [ label="#migration" ]
+      StrategyA
+      StrategyB
+      StrategyC
+    }
+  }
+
+  RemoveObsoletedDiffers -> SelectMigrationGenerator
+
+  subgraph cluster_generate {
+    // TODO
+  }
+
+}
