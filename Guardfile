@@ -49,3 +49,11 @@ group :red_green_refactor, halt_on_fail: true do
     watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
   end
 end
+
+if ENV["TERM"] =~ /xterm-kitty/
+  guard :shell do
+    watch /(.*)\.dot$/ do |m|
+      `dot -Tpng "#{m[0]}" -o "#{m[1]}.png" && kitty +kitten icat "#{m[1]}.png"`
+    end
+  end
+end
