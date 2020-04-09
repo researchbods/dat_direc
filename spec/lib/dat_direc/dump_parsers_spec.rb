@@ -31,7 +31,7 @@ RSpec.describe DatDirec::DumpParsers do
 
     context "when given a non-class object" do
       let(:parser) { 0 }
-      it "raises ArgumentError" do
+      it "raises BadParserError" do
         expect { subject }.to raise_error(DD::DumpParsers::BadParserError)
       end
 

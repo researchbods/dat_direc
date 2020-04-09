@@ -40,7 +40,7 @@ RSpec.shared_examples_for "a migration generator" do
       let(:migration) { Struct.new("fake_data").new(1) }
 
       it "raises an error" do
-        expect { subject }.to raise_error
+        expect { subject }.to raise_error(StandardError)
       end
     end
   end

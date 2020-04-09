@@ -11,7 +11,6 @@ module DatDirec
         include ParseHelper
 
         def initialize(line, line_no)
-          @pos = 0
           @io = StringIO.new(line)
           @line_no = line_no
           @name = ""
