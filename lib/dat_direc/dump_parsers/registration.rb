@@ -18,21 +18,23 @@ module DatDirec
   module DumpParsers
     class BadParserError < StandardError; end
 
-    def self.parsers
-      @parsers ||= Set.new
-    end
-
-    def self.find_parser(io)
-      parsers.find { |p| p.detect(io) }
-    end
-
-    def self.register_parser(klass)
-      unless klass.is_a? Class
-        raise BadParserError,
-          "attempted to register a parser which was not a class"
+    class << self
+      def parsers
+        @parsers ||= Set.new
       end
 
-      parsers << klass
+      def find_parser(io)
+        parsers.find { |p| p.detect(io) }
+      end
+
+      def register_parser(klass)
+        unless klass.is_a? Class
+          raise BadParserError,
+            "attempted to register a parser which was not a class"
+        end
+
+        parsers << klass
+      end
     end
   end
 end

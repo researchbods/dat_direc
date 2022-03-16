@@ -33,24 +33,27 @@ module DatDirec
     # (currently just needs a priority class method)
     class BadDifferError < StandardError; end
 
-    # registers a differ.
-    def self.register(differ)
-      DifferProtocolEnforcer.raise_if_not_implemented_by(differ)
+    class << self
+      # registers a differ.
+      def register(differ)
+        DifferProtocolEnforcer.raise_if_not_implemented_by(differ)
 
-      differs << differ
-    end
-
-    def self.diff(databases)
-      results = []
-      differs.to_a.sort_by(&:priority).each do |differ|
-        results += differ.new(databases).diff
+        differs << differ
       end
-      results
-    end
 
-    def self.differs
-      @differs ||= Set.new
+      def diff(databases)
+        results = []
+        differs.to_a.sort_by(&:priority).each do |differ|
+          results += differ.new(databases).diff
+        end
+        results
+      end
+
+      private
+
+      def differs
+        @differs ||= Set.new
+      end
     end
-    class << self; private :differs; end
   end
 end
